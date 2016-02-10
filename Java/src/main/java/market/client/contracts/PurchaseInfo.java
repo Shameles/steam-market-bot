@@ -1,4 +1,4 @@
-package market.contracts;
+package market.client.contracts;
 
 import com.google.gson.annotations.SerializedName;
 

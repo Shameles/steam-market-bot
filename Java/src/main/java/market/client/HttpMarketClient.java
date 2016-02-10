@@ -1,9 +1,10 @@
-package market;
+package market.client;
 
 
 import com.google.gson.*;
-import market.contracts.MarketClient;
-import market.contracts.PurchaseInfo;
+import market.client.contracts.MarketClient;
+import market.client.contracts.MarketOperationException;
+import market.client.contracts.PurchaseInfo;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -16,11 +17,11 @@ import java.net.URL;
 import java.util.Date;
 
 
-public class HttpsMarketClient implements MarketClient {
+public class HttpMarketClient implements MarketClient {
 
     private  final URL getHistoryUrl;
     private final Gson gson;
-    public HttpsMarketClient() throws MalformedURLException {
+    public HttpMarketClient() throws MalformedURLException {
         getHistoryUrl =  new URL("http://market.csgo.com/history/json/");
 
         gson = createGsonBuilder().create();

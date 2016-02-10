@@ -1,6 +1,4 @@
-package market.contracts;
-
-import market.MarketOperationException;
+package market.client.contracts;
 
 /**
  * Интерфейс взаимодействия с магазином

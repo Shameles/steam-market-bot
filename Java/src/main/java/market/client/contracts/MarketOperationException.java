@@ -1,4 +1,4 @@
-package market;
+package market.client.contracts;
 
 
 public class MarketOperationException extends Exception {

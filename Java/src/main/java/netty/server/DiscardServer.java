@@ -11,6 +11,14 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.apache.log4j.PropertyConfigurator;
+import org.hibernate.HibernateException;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * Discards any incoming data.
@@ -18,6 +26,7 @@ import org.apache.log4j.PropertyConfigurator;
 public class DiscardServer {
 
     private int port;
+    private static SessionFactory sessionFactory = null;
 
     public DiscardServer(int port) {
         this.port = port;
@@ -54,7 +63,8 @@ public class DiscardServer {
 
     public static void main(String[] args) throws Exception {
 
-        PropertyConfigurator.configure("/home/stepan/Develop/CompareTest/Java/src/main/config/log4j.properties");
+        configureLog4j();
+        sessionFactory = configureHibernateSessionFactory();
 
         QuartzTest quartzTest = new QuartzTest();
         int port;
@@ -66,4 +76,33 @@ public class DiscardServer {
         new DiscardServer(port).run();
 
     }
+
+    //private
+
+    /**
+     * настраиваем log4j
+     */
+    private static   void configureLog4j(){
+        InputStream input = null;
+        input = DiscardServer.class.getClassLoader().getResourceAsStream("log4j.properties");
+        Properties log4jConfig = new Properties();
+        try {
+            log4jConfig.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        PropertyConfigurator.configure(log4jConfig);
+    }
+
+
+
+    private static SessionFactory configureHibernateSessionFactory() throws HibernateException {
+        // A SessionFactory is set up once for an application
+        sessionFactory = new Configuration()
+                .configure() // configures settings from hibernate.cfg.xml
+                .buildSessionFactory();
+        return sessionFactory;
+    }
+
+
 }
