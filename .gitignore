@@ -1,8 +1,16 @@
 #intelliji idea
 Java/.idea/*
 
+#editing gitignore 
+.gitignore~
+
 #java 
 *.class
+Java/target/*
+
+#sqlite
+*.db
+*.db-journal
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
