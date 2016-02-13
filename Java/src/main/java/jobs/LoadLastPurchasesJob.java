@@ -12,7 +12,7 @@ import org.quartz.JobExecutionException;
 import java.net.MalformedURLException;
 
 /**
- * джоб по загрузке последних покупок из магазина
+ * джоб по загрузке последних покупок из магазина 
  */
 public class LoadLastPurchasesJob implements Job {
 
