@@ -8,14 +8,11 @@
         <meta attribute="class-description">
             Класс содержит информацию о покупке, совершенной в магазине.
         </meta>
-        <id name="id" type="int" column="id">
-            <generator class="native"/>
-        </id>
+        <id name="purchaseId" type="long" column="purchase_id"/>
         <property name="classId" column="class_id" type="long"/>
         <property name="instanceId" column="instance_id" type="long"/>
         <property name="hashName" column="hash_hame" type="string"/>
         <property name="price" column="price" type="float"/>
-        <property name="purchaseId" column="purchase_id" type="long"/>
         <property name="time" column="time" type="date"/>
     </class>
 </hibernate-mapping>

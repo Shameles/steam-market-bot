@@ -6,8 +6,20 @@ import java.util.Date;
  */
 public class PurchaseInfo {
 
-    //идентификатор в БД
-    private long id;
+    public PurchaseInfo(){
+    }
+
+    public PurchaseInfo(long purchaseId, long classId, long instanceId, String hashName, float price, Date time){
+        setPurchaseId(purchaseId);
+        setClassId(classId);
+        setInstanceId(instanceId);
+        setHashName(hashName);
+        setPrice(price);
+        setTime(time);
+    }
+
+    //идентификатор покупки, полученный из магазина.
+    private long purchaseId;
 
     //тип предмета
     private long classId;
@@ -19,9 +31,6 @@ public class PurchaseInfo {
 
     //цена
     private float price;
-
-    //идентификатор покупки, полученный из магазина
-    private long purchaseId;
 
     //время совершения покупки
     private Date time;
@@ -56,14 +65,6 @@ public class PurchaseInfo {
 
     public void setPrice(float price) {
         this.price = price;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public Date getTime() {

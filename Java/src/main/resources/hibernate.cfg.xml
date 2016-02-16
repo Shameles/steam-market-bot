@@ -4,17 +4,22 @@
 
 <hibernate-configuration>
     <session-factory>
-        <property name="show_sql">true</property>
-        <property name="format_sql">true</property>
-        <property name="dialect">org.hibernate.SQLiteDialect</property>
-        <property name="connection.driver_class">org.sqlite.JDBC</property>
-        <property name="connection.url">jdbc:sqlite:mydb.db</property>
-        <property name="connection.username">admin</property>
-        <property name="connection.password">admin</property>
+        <!-- Connection settings -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost/steamMarketBot</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">postgres</property>
+
+        <!-- SQL dialect -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL92Dialect</property>
+
+        <!-- Print executed SQL to stdout -->
+        <property name="show_sql">false</property>
+
+        <!-- Drop and re-create all database on startup -->
         <property name="hibernate.hbm2ddl.auto">update</property>
-        <property name="connection.pool_size">1</property>
 
-
-        <mapping resource="market/dal/hibernate/PurchaseInfo.hbm.xml"/>
+        <!-- Annotated entity classes -->
+        <mapping resource="market/dal/hibernate/mapping/PurchaseInfo.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

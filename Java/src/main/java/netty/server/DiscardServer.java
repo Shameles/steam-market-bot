@@ -1,6 +1,6 @@
 package netty.server;
 
-import jobs.QuartzTest;
+
 import io.netty.bootstrap.ServerBootstrap;
 
 import io.netty.channel.ChannelFuture;
@@ -10,11 +10,13 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import jobs.QuartzUtils;
+import jobs.SimpleJobFactory;
 import org.apache.log4j.PropertyConfigurator;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
+import org.quartz.Scheduler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +29,7 @@ public class DiscardServer {
 
     private int port;
     private static SessionFactory sessionFactory = null;
+    private static Scheduler loadPurchaseHistoryScheduller = null;
 
     public DiscardServer(int port) {
         this.port = port;
@@ -65,8 +68,11 @@ public class DiscardServer {
 
         configureLog4j();
         sessionFactory = configureHibernateSessionFactory();
+        Properties quartConfig = new Properties();
+        quartConfig.load(DiscardServer.class.getClassLoader().getResourceAsStream("quartz.properties"));
+        loadPurchaseHistoryScheduller = QuartzUtils.configureScheduler(new SimpleJobFactory(sessionFactory), quartConfig);
+        loadPurchaseHistoryScheduller.start();
 
-        QuartzTest quartzTest = new QuartzTest();
         int port;
         if (args.length > 0) {
             port = Integer.parseInt(args[0]);
@@ -83,8 +89,7 @@ public class DiscardServer {
      * настраиваем log4j
      */
     private static   void configureLog4j(){
-        InputStream input = null;
-        input = DiscardServer.class.getClassLoader().getResourceAsStream("log4j.properties");
+        InputStream input = DiscardServer.class.getClassLoader().getResourceAsStream("log4j.properties");
         Properties log4jConfig = new Properties();
         try {
             log4jConfig.load(input);
@@ -95,7 +100,11 @@ public class DiscardServer {
     }
 
 
-
+    /**
+     * создание и настройка hibernate SessionFactory
+     * @return сконфигурированная для работы hibernate SessionFactory
+     * @throws HibernateException
+     */
     private static SessionFactory configureHibernateSessionFactory() throws HibernateException {
         // A SessionFactory is set up once for an application
         sessionFactory = new Configuration()
