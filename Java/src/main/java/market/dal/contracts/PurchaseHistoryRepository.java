@@ -1,13 +1,10 @@
 package market.dal.contracts;
 
-import org.hibernate.Session;
-
 import java.util.Collection;
 
 /**
- * репозиторий работы с историей покупок
+ * Репозиторий работы с историей покупок
  */
 public interface PurchaseHistoryRepository {
-    void saveAll(Session session, Collection<PurchaseInfo> purchasesForSave);
-    Collection<PurchaseInfo> getAll(Session session);
+    void saveAll(Collection<PurchaseInfo> purchasesForSave) throws DataAccessException;
 }

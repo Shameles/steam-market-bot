@@ -12,6 +12,11 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import jobs.QuartzUtils;
 import jobs.SimpleJobFactory;
+import market.businessLogic.commands.Command;
+import market.businessLogic.commands.LoadLastPurchasesCommand;
+import market.client.HttpMarketClient;
+import market.client.contracts.MarketClient;
+import market.dal.hibernate.HibernatePurchaseHistoryRepository;
 import org.apache.log4j.PropertyConfigurator;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
@@ -20,6 +25,8 @@ import org.quartz.Scheduler;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -27,7 +34,11 @@ import java.util.Properties;
  */
 public class DiscardServer {
 
+    //поля с настройками для netty
     private int port;
+
+    //поля, необходимые для логики приложения
+    private static MarketClient marketClient = null;
     private static SessionFactory sessionFactory = null;
     private static Scheduler loadPurchaseHistoryScheduller = null;
 
@@ -66,11 +77,18 @@ public class DiscardServer {
 
     public static void main(String[] args) throws Exception {
 
+
         configureLog4j();
+
+        marketClient = new HttpMarketClient();
+
         sessionFactory = configureHibernateSessionFactory();
+
+        List<Command> jobsLogic = new ArrayList<Command>();
+        jobsLogic.add(new LoadLastPurchasesCommand(marketClient, new HibernatePurchaseHistoryRepository(sessionFactory)));
         Properties quartConfig = new Properties();
         quartConfig.load(DiscardServer.class.getClassLoader().getResourceAsStream("quartz.properties"));
-        loadPurchaseHistoryScheduller = QuartzUtils.configureScheduler(new SimpleJobFactory(sessionFactory), quartConfig);
+        loadPurchaseHistoryScheduller = QuartzUtils.configureScheduler(new SimpleJobFactory(jobsLogic), quartConfig);
         loadPurchaseHistoryScheduller.start();
 
         int port;
@@ -88,7 +106,7 @@ public class DiscardServer {
     /**
      * настраиваем log4j
      */
-    private static   void configureLog4j(){
+    private static void configureLog4j() {
         InputStream input = DiscardServer.class.getClassLoader().getResourceAsStream("log4j.properties");
         Properties log4jConfig = new Properties();
         try {
@@ -102,6 +120,7 @@ public class DiscardServer {
 
     /**
      * создание и настройка hibernate SessionFactory
+     *
      * @return сконфигурированная для работы hibernate SessionFactory
      * @throws HibernateException
      */

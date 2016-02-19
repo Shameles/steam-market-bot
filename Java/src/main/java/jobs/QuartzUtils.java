@@ -1,6 +1,5 @@
 package jobs;
 
-import org.hibernate.SessionFactory;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.spi.JobFactory;
@@ -14,7 +13,7 @@ import static org.quartz.TriggerBuilder.*;
 
 public class QuartzUtils {
     private static final String LOAD_PURCHASE_HISTORY_GROUP = "LOAD_PURCHASE_HISTORY_GROUP";
-    private static final int DEFAULT_JOB_INTERVAL_IN_SECONDS = 60;
+    private static final int DEFAULT_JOB_INTERVAL_IN_SECONDS = 80;
 
     public static Scheduler configureScheduler(JobFactory jobFactory, Properties quartzSettings) throws SchedulerException, InterruptedException {
         SchedulerFactory sf = new StdSchedulerFactory(quartzSettings);
@@ -28,7 +27,6 @@ public class QuartzUtils {
         int jobInterval = Integer.parseInt(quartzSettings.getProperty("jobs.customsSettings.loadLastPurchaseJobInterval"
                 , Integer.toString(DEFAULT_JOB_INTERVAL_IN_SECONDS)));
 
-
         Trigger trigger = newTrigger()
                 .withIdentity("trigger1", LOAD_PURCHASE_HISTORY_GROUP)
                 .startNow()
@@ -37,7 +35,6 @@ public class QuartzUtils {
                         .repeatForever())
                 .build();
         sched.scheduleJob(job, trigger);
-
 
         return sched;
     }

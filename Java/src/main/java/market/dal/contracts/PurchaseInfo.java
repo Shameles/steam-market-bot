@@ -2,7 +2,7 @@ package market.dal.contracts;
 import java.util.Date;
 
 /**
- * Информация о покупке, совершенной в магазине
+ * DTO, содержащий информацию о покупке, совершенной в магазине
  */
 public class PurchaseInfo {
 

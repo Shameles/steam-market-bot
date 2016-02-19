@@ -23,10 +23,8 @@ public class HttpMarketClient implements MarketClient {
     private final Gson gson;
     public HttpMarketClient() throws MalformedURLException {
         getHistoryUrl =  new URL("http://market.csgo.com/history/json/");
-
         gson = createGsonBuilder().create();
     }
-
 
     public PurchaseInfo[] getLastPurchases() throws MarketOperationException {
         try {
@@ -66,7 +64,6 @@ public class HttpMarketClient implements MarketClient {
 
     /**
      * создаем и настраиваем GsonBuilder
-     * @return
      */
     private GsonBuilder createGsonBuilder(){
         // Creates the json object which will manage the information received
