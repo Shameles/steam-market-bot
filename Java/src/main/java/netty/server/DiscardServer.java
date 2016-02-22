@@ -10,21 +10,17 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import jobs.QuartzUtils;
-import jobs.SimpleJobFactory;
+import market.jobs.QuartzUtils;
+import market.jobs.SimpleJobFactory;
 import market.businessLogic.commands.Command;
 import market.businessLogic.commands.LoadLastPurchasesCommand;
 import market.client.HttpMarketClient;
 import market.client.contracts.MarketClient;
 import market.dal.hibernate.HibernatePurchaseHistoryRepository;
-import org.apache.log4j.PropertyConfigurator;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.quartz.Scheduler;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -78,8 +74,6 @@ public class DiscardServer {
     public static void main(String[] args) throws Exception {
 
 
-        configureLog4j();
-
         marketClient = new HttpMarketClient();
 
         sessionFactory = configureHibernateSessionFactory();
@@ -103,22 +97,7 @@ public class DiscardServer {
 
     //private
 
-    /**
-     * настраиваем log4j
-     */
-    private static void configureLog4j() {
-        InputStream input = DiscardServer.class.getClassLoader().getResourceAsStream("log4j.properties");
-        Properties log4jConfig = new Properties();
-        try {
-            log4jConfig.load(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        PropertyConfigurator.configure(log4jConfig);
-    }
-
-
-    /**
+     /**
      * создание и настройка hibernate SessionFactory
      *
      * @return сконфигурированная для работы hibernate SessionFactory

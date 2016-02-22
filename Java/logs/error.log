@@ -1,0 +1,4 @@
+00:00:18.026 [QuartzScheduler_Worker-1] WARN  market.client.HttpMarketClient - GET Response Code: 302. Skip reading response body.
+00:00:18.029 [QuartzScheduler_Worker-1] WARN  market.businessLogic.commands.LoadLastPurchasesCommand - Can't get data from market client, stop current execution.
+00:01:16.946 [QuartzScheduler_Worker-2] WARN  market.client.HttpMarketClient - GET Response Code: 302. Skip reading response body.
+00:01:16.946 [QuartzScheduler_Worker-2] WARN  market.businessLogic.commands.LoadLastPurchasesCommand - Can't get data from market client, stop current execution.

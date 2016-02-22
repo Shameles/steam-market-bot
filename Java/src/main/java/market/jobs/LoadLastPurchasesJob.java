@@ -1,4 +1,4 @@
-package jobs;
+package market.jobs;
 
 import market.businessLogic.commands.Command;
 

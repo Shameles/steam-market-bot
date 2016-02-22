@@ -4,7 +4,9 @@ import market.businessLogic.BusinessLogicException;
 import market.client.contracts.MarketClient;
 import market.client.contracts.PurchaseInfo;
 import market.dal.contracts.PurchaseHistoryRepository;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -15,7 +17,7 @@ public class LoadLastPurchasesCommand implements Command {
 
     private MarketClient marketClient;
     private PurchaseHistoryRepository repository;
-    private Logger _log = Logger.getLogger(LoadLastPurchasesCommand.class);
+    private Logger log = LogManager.getLogger(LoadLastPurchasesCommand.class);
 
     public LoadLastPurchasesCommand(MarketClient marketClient, PurchaseHistoryRepository repository) {
 
@@ -26,12 +28,16 @@ public class LoadLastPurchasesCommand implements Command {
     public void execute() throws BusinessLogicException {
         try {
             PurchaseInfo[] lastPurchases = marketClient.getLastPurchases();
+            if (lastPurchases==null){
+                log.warn("Can't get data from market client, stop current execution.");
+                return;
+            }
             Collection<market.dal.contracts.PurchaseInfo> lastPurchaseDTOs = new HashSet<market.dal.contracts.PurchaseInfo>();
             for (PurchaseInfo purchaseInfo : lastPurchases) {
                 lastPurchaseDTOs.add(convertToDTO(purchaseInfo));
             }
             repository.saveAll(lastPurchaseDTOs);
-            _log.info(lastPurchases.length+" PurchaseInfo items processed");
+            log.info(lastPurchases.length+" PurchaseInfo items processed");
         }
         catch (Exception e){
             throw new BusinessLogicException(e);
