@@ -9,7 +9,8 @@ Java/.idea/*
 Java/target/*
 
 #logs
-!logs/*
+Java/logs
+
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
