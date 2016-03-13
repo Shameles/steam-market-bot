@@ -1,38 +1,35 @@
-package market.dal.contracts;
+package market.client.contract;
+
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 /**
- * DTO, содержащий информацию о покупке, совершенной в магазине
+ * Информация о покупке, совершенной в магазине
  */
 public class PurchaseInfo {
 
-    public PurchaseInfo(){
-    }
-
-    public PurchaseInfo(long purchaseId, long classId, long instanceId, String hashName, float price, Date time){
-        setPurchaseId(purchaseId);
-        setClassId(classId);
-        setInstanceId(instanceId);
-        setHashName(hashName);
-        setPrice(price);
-        setTime(time);
-    }
-
-    //идентификатор покупки, полученный из магазина.
-    private long purchaseId;
-
     //тип предмета
+    @SerializedName("classid")
     private long classId;
 
+    @SerializedName("instanceid")
     private long instanceId;
 
     //название
+    @SerializedName("hash_name")
     private String hashName;
 
     //цена
+    @SerializedName("price")
     private float price;
 
+    //идентификатор покупки
+    @SerializedName("id")
+    private long id;
+
     //время совершения покупки
+    @SerializedName("time")
     private Date time;
 
     public long getClassId() {
@@ -67,19 +64,19 @@ public class PurchaseInfo {
         this.price = price;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public Date getTime() {
         return time;
     }
 
     public void setTime(Date time) {
         this.time = time;
-    }
-
-    public long getPurchaseId() {
-        return purchaseId;
-    }
-
-    public void setPurchaseId(long purchaseId) {
-        this.purchaseId = purchaseId;
     }
 }

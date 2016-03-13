@@ -1,4 +1,4 @@
-package market.businessLogic.commands;
+package market.businessLogic.command;
 
 import market.businessLogic.BusinessLogicException;
 

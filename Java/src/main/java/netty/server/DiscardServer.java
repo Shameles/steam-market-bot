@@ -10,21 +10,23 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import market.jobs.QuartzUtils;
-import market.jobs.SimpleJobFactory;
-import market.businessLogic.commands.Command;
-import market.businessLogic.commands.LoadLastPurchasesCommand;
-import market.client.HttpMarketClient;
-import market.client.contracts.MarketClient;
+import market.client.*;
+import market.client.contract.MarketClient;
+import market.dal.contract.PurchaseHistoryRepository;
 import market.dal.hibernate.HibernatePurchaseHistoryRepository;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.quartz.Scheduler;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
+
+import java.net.URI;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 /**
  * Discards any incoming data.
  */
@@ -74,6 +76,8 @@ public class DiscardServer {
     public static void main(String[] args) throws Exception {
 
 
+
+        /*
         marketClient = new HttpMarketClient();
 
         sessionFactory = configureHibernateSessionFactory();
@@ -92,7 +96,13 @@ public class DiscardServer {
             port = 8080;
         }
         new DiscardServer(port).run();
+        */
 
+        sessionFactory = configureHibernateSessionFactory();
+        PurchaseHistoryRepository repo =new HibernatePurchaseHistoryRepository(sessionFactory);
+        Float test = repo.getAveragePrice(1384153623,188530139, Duration.ofDays(32));
+        String s="";
+       // socketTest();
     }
 
     //private
@@ -111,5 +121,30 @@ public class DiscardServer {
         return sessionFactory;
     }
 
+    private static void socketTest(){
+        String dest = "wss://wsn.dota2.net/wsn/";
+        SslContextFactory ssl = new SslContextFactory();
+        WebSocketClient client = new WebSocketClient(ssl);
+        try {
 
+            MarketWebSocketClient socket = new MarketWebSocketClient(new WebSocketChannelDescriptor[]{new NewItemsChannelDescriptor(JsonUtils.createGsonBuilder().create())});
+            client.start();
+            URI echoUri = new URI(dest);
+            ClientUpgradeRequest request = new ClientUpgradeRequest();
+            client.connect(socket, echoUri, request);
+            socket.getLatch().await(30, TimeUnit.SECONDS);
+
+
+
+
+        } catch (Throwable t) {
+            t.printStackTrace();
+        } finally {
+            try {
+                client.stop();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

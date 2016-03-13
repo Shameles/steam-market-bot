@@ -1,7 +1,7 @@
-package market.jobs;
+package market.job;
 
-import market.businessLogic.commands.Command;
-import market.businessLogic.commands.LoadLastPurchasesCommand;
+import market.businessLogic.command.Command;
+import market.businessLogic.command.LoadLastPurchasesCommand;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.quartz.Job;

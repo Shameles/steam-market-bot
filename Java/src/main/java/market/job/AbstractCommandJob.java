@@ -1,6 +1,6 @@
-package market.jobs;
+package market.job;
 
-import market.businessLogic.commands.Command;
+import market.businessLogic.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -13,7 +13,7 @@ import org.quartz.JobExecutionException;
  */
 public abstract class AbstractCommandJob implements Job {
 
-    protected Logger _log = LogManager.getLogger(getClass());
+    protected Logger log = LogManager.getLogger(getClass());
     private Command command;
 
     public AbstractCommandJob(@NonNull Command command){
@@ -21,13 +21,13 @@ public abstract class AbstractCommandJob implements Job {
     }
 
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        _log.info("job started");
+        log.info("job started");
         try {
             command.execute();
-            _log.info("job completed successfully");
+            log.info("job completed successfully");
         }
         catch (Exception e){
-            _log.error("error completed with error", e);
+            log.error("error completed with error", e);
         }
     }
 }

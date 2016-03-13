@@ -28,11 +28,13 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="debug">
+        <Root level="all">
             <AppenderRef ref="Console"/>
         </Root>
-        <Logger name="market" level="warn" additivity="true">
-            <AppenderRef ref="Error"/>
+        <Logger name="market" additivity="false" >
+            <AppenderRef ref="Error" level="warn"/>
+            <AppenderRef ref="Console" level="debug" />
         </Logger>
+        <Logger name="org.hibernate" additivity="true" level="info"/>
     </Loggers>
 </Configuration>

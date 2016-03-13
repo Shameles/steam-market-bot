@@ -4,7 +4,7 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="market.dal.contracts.PurchaseInfo" table="PURCHASE_HISTORY">
+    <class name="market.dal.contract.PurchaseInfo" table="PURCHASE_HISTORY">
         <meta attribute="class-description">
             Класс содержит информацию о покупке, совершенной в магазине.
         </meta>
@@ -13,6 +13,6 @@
         <property name="instanceId" column="instance_id" type="long"/>
         <property name="hashName" column="hash_hame" type="string"/>
         <property name="price" column="price" type="float"/>
-        <property name="time" column="time" type="date"/>
+        <property name="time" column="time" type="timestamp"/>
     </class>
 </hibernate-mapping>

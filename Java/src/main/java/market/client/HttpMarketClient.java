@@ -2,9 +2,9 @@ package market.client;
 
 
 import com.google.gson.*;
-import market.client.contracts.MarketClient;
-import market.client.contracts.MarketOperationException;
-import market.client.contracts.PurchaseInfo;
+import market.client.contract.MarketClient;
+import market.client.contract.MarketOperationException;
+import market.client.contract.PurchaseInfo;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -12,21 +12,21 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
 
 
 public class HttpMarketClient implements MarketClient {
 
+    private static final String GET_HISTORY_URL="http://market.csgo.com/history/json/";
+
     private static Logger log = LogManager.getLogger(HttpMarketClient.class);
-    private  final URL getHistoryUrl;
+    private final URL getHistoryUrl;
     private final Gson gson;
     public HttpMarketClient() throws MalformedURLException {
-        getHistoryUrl =  new URL("http://market.csgo.com/history/json/");
-        gson = createGsonBuilder().create();
+        gson = JsonUtils.createGsonBuilder().create();
+        getHistoryUrl = new URL(GET_HISTORY_URL);
     }
 
     public PurchaseInfo[] getLastPurchases() throws MarketOperationException {
@@ -58,26 +58,9 @@ public class HttpMarketClient implements MarketClient {
             }
             in.close();
             return response.toString();
-
         } else {
             log.warn("GET Response Code: {}. Skip reading response body.", responseCode);
             return null;
         }
-    }
-
-    /**
-     * создаем и настраиваем GsonBuilder
-     */
-    private GsonBuilder createGsonBuilder(){
-        // Creates the json object which will manage the information received
-        GsonBuilder builder = new GsonBuilder();
-
-        // Register an adapter to manage the date types as long values
-        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-            public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-                return new Date(json.getAsJsonPrimitive().getAsLong());
-            }
-        });
-        return builder;
     }
 }

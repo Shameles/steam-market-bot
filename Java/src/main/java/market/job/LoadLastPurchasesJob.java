@@ -1,6 +1,6 @@
-package market.jobs;
+package market.job;
 
-import market.businessLogic.commands.Command;
+import market.businessLogic.command.Command;
 
 /**
  * Created by stepan on 19.02.16.

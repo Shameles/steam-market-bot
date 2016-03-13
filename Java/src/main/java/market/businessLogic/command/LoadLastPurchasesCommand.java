@@ -1,9 +1,9 @@
-package market.businessLogic.commands;
+package market.businessLogic.command;
 
 import market.businessLogic.BusinessLogicException;
-import market.client.contracts.MarketClient;
-import market.client.contracts.PurchaseInfo;
-import market.dal.contracts.PurchaseHistoryRepository;
+import market.client.contract.MarketClient;
+import market.client.contract.PurchaseInfo;
+import market.dal.contract.PurchaseHistoryRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,9 +32,18 @@ public class LoadLastPurchasesCommand implements Command {
                 log.warn("Can't get data from market client, stop current execution.");
                 return;
             }
-            Collection<market.dal.contracts.PurchaseInfo> lastPurchaseDTOs = new HashSet<market.dal.contracts.PurchaseInfo>();
+            Collection<market.dal.contract.PurchaseInfo> lastPurchaseDTOs = new HashSet<market.dal.contract.PurchaseInfo>();
             for (PurchaseInfo purchaseInfo : lastPurchases) {
-                lastPurchaseDTOs.add(convertToDTO(purchaseInfo));
+                if (isNeedToSavePurchaseInfo(purchaseInfo)) {
+                    lastPurchaseDTOs.add(convertToDTO(purchaseInfo));
+                }
+                else {
+                    log.info("PurchaseInfo [name:{}, class_id:{}, instance_id:{}, price:{}] was ignored for history",
+                            purchaseInfo.getHashName(),
+                            purchaseInfo.getClassId(),
+                            purchaseInfo.getInstanceId(),
+                            purchaseInfo.getPrice());
+                }
             }
             repository.saveAll(lastPurchaseDTOs);
             log.info(lastPurchases.length+" PurchaseInfo items processed");
@@ -46,11 +55,18 @@ public class LoadLastPurchasesCommand implements Command {
 
     //private
 
+    private static  boolean isNeedToSavePurchaseInfo(PurchaseInfo purchaseInfo){
+        if (purchaseInfo.getPrice()>100){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * конвертирует информацию о покупке, полуенную из внешней системы в DTO
      */
-    private static market.dal.contracts.PurchaseInfo convertToDTO(PurchaseInfo purchaseInfo){
-        return new market.dal.contracts.PurchaseInfo(purchaseInfo.getId(),
+    private static market.dal.contract.PurchaseInfo convertToDTO(PurchaseInfo purchaseInfo){
+        return new market.dal.contract.PurchaseInfo(purchaseInfo.getId(),
                 purchaseInfo.getClassId(),
                 purchaseInfo.getInstanceId(),
                 purchaseInfo.getHashName(),

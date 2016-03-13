@@ -1,4 +1,4 @@
-package market.dal.contracts;
+package market.dal.contract;
 
 /**
  * Обертка для ошибок, которые кидаются dal классами.

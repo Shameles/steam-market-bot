@@ -1,4 +1,4 @@
-package market.jobs;
+package market.job;
 
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;

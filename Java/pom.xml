@@ -44,6 +44,12 @@
         <version>1.9.11</version>
     </dependency>
 
+    <dependency>
+        <groupId>org.eclipse.jetty.websocket</groupId>
+        <artifactId>websocket-client</artifactId>
+        <version>9.3.7.v20160115</version>
+    </dependency>
+
 </dependencies>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
