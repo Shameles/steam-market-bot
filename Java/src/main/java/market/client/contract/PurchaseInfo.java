@@ -1,6 +1,7 @@
 package market.client.contract;
 
 import com.google.gson.annotations.SerializedName;
+import market.util.MarketItemId;
 
 import java.util.Date;
 
@@ -31,6 +32,7 @@ public class PurchaseInfo {
     //время совершения покупки
     @SerializedName("time")
     private Date time;
+    private MarketItemId marketItemId;
 
     public long getClassId() {
         return classId;
@@ -78,5 +80,12 @@ public class PurchaseInfo {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public MarketItemId getMarketItemId() {
+        if (marketItemId==null){
+            marketItemId = new MarketItemId(classId,instanceId);
+        }
+        return marketItemId;
     }
 }

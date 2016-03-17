@@ -1,20 +1,31 @@
 package market.businessLogic.workflow;
 
-import com.sun.org.apache.bcel.internal.generic.RET;
+
+import market.businessLogic.ItemEstimateResult;
+import market.businessLogic.ItemOnSaleChecker;
+import market.client.contract.ItemOnSale;
 
 /**
  * Created by stepan on 12.03.16.
  */
 public class BuyNewItemWorkflow {
 
-    public boolean isNeedToBuy(){
 
-        return true;
+    private final ItemOnSaleChecker itemChecker;
+
+    public BuyNewItemWorkflow(ItemOnSaleChecker itemChecker) {
+        this.itemChecker = itemChecker;
     }
 
-    public Object getAvailableWorker(){
-        return null;
+    public void execute(ItemOnSale item) {
+        ItemEstimateResult checkResult = itemChecker.estimate(item);
+        if (checkResult == ItemEstimateResult.IGNORE) {
+            return;
+        }
+
     }
+
+
 /*
     public void execute(item){
         if (!isNeedToBuy()){

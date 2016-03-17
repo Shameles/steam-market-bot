@@ -1,6 +1,8 @@
 package market.client.contract;
 
 import com.google.gson.annotations.SerializedName;
+import market.util.MarketItemId;
+
 
 /**
  * Класс, содержащий информацию о вещи, выставленной на продажу.
@@ -38,6 +40,7 @@ public class ItemOnSale {
     //цена в рублях
     @SerializedName("ui_price")
     private float price;
+    private MarketItemId marketItemId;
 
 
     //properties
@@ -72,5 +75,12 @@ public class ItemOnSale {
 
     public boolean isCSGOItem(){
         return application.equalsIgnoreCase("go");
+    }
+
+    public MarketItemId getMarketItemId() {
+        if (marketItemId==null){
+            marketItemId = new MarketItemId(classId,instanceId);
+        }
+        return marketItemId;
     }
 }

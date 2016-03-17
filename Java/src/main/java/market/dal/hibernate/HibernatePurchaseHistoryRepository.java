@@ -1,18 +1,17 @@
 package market.dal.hibernate;
 
 import market.dal.contract.DataAccessException;
+import market.dal.contract.ItemPurchaseStatistic;
 import market.dal.contract.PurchaseInfo;
+import market.util.MarketItemId;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.hibernate.*;
-import org.hibernate.criterion.Expression;
-import org.hibernate.criterion.Restrictions;
 
 import java.time.Duration;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import static java.lang.Math.toIntExact;
 
@@ -45,22 +44,24 @@ public class HibernatePurchaseHistoryRepository implements market.dal.contract.P
         }
     }
 
-    public @Nullable Float getAveragePrice(long classId, long instanceId, Duration significantTimeInterval) {
+    public @Nullable ItemPurchaseStatistic getItemPurchaseStatistic(MarketItemId marketItemId, Duration significantTimeInterval) {
         Session session = sessionFactory.openSession();
         try {
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
             cal.add(Calendar.MINUTE, toIntExact(-1*significantTimeInterval.toMinutes()));
             Date minActualDate = cal.getTime();
-            Query query = session.createQuery("select avg(price) from PurchaseInfo where classId = :classId and instanceId=:instanceId and time>:minActualDate");
-            query.setParameter("classId", classId);
-            query.setParameter("instanceId", instanceId);
+            Query query = session.createQuery("select count(*),avg(price) from PurchaseInfo where classId = :classId and instanceId=:instanceId and time>:minActualDate");
+            query.setParameter("classId", marketItemId.getClassId());
+            query.setParameter("instanceId", marketItemId.getInstanceId());
             query.setParameter("minActualDate", minActualDate);
-            Double avgPrice = (Double) query.uniqueResult();
-            if (avgPrice==null){
+            Object[] queryResult = (Object[]) query.uniqueResult();
+            Long purchaseCount = (Long) queryResult[0];
+            if (purchaseCount == 0){
                 return null;
             }
-            return avgPrice.floatValue();
+            Double avgPrice = (Double) queryResult[1];
+            return new ItemPurchaseStatistic(marketItemId, avgPrice.floatValue(), purchaseCount);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();

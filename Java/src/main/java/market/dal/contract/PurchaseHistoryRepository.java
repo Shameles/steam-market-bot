@@ -1,5 +1,6 @@
 package market.dal.contract;
 
+import market.util.MarketItemId;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -13,10 +14,10 @@ public interface PurchaseHistoryRepository {
     void saveAll(@NonNull Collection<PurchaseInfo> purchasesForSave) throws DataAccessException;
 
     /**
-     * Получить среднюю цену на предмет с заданными @classId и @instanceId.
+     * Получить среднюю цену на предмет с заданным @marketItemId.
      * Учитываются только значения, полученные не позднее чем, текущая дата - @significantTimeInterval
      * @param significantTimeInterval интервал времени, который учитывается в рассчете средней цены вещи
      */
     @Nullable
-    Float getAveragePrice(long classId, long instanceId, @NonNull Duration significantTimeInterval);
+    ItemPurchaseStatistic getItemPurchaseStatistic(MarketItemId marketItemId, @NonNull Duration significantTimeInterval);
 }

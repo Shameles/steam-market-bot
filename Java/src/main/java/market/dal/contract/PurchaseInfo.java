@@ -1,4 +1,6 @@
 package market.dal.contract;
+import market.util.MarketItemId;
+
 import java.util.Date;
 
 /**
@@ -34,6 +36,8 @@ public class PurchaseInfo {
 
     //время совершения покупки
     private Date time;
+
+    private MarketItemId marketItemId;
 
     public long getClassId() {
         return classId;
@@ -81,5 +85,13 @@ public class PurchaseInfo {
 
     public void setPurchaseId(long purchaseId) {
         this.purchaseId = purchaseId;
+    }
+
+
+    public MarketItemId getMarketItemId() {
+        if (marketItemId==null){
+            marketItemId = new MarketItemId(classId,instanceId);
+        }
+        return marketItemId;
     }
 }

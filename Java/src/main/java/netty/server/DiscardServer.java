@@ -12,8 +12,10 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import market.client.*;
 import market.client.contract.MarketClient;
+import market.dal.contract.ItemPurchaseStatistic;
 import market.dal.contract.PurchaseHistoryRepository;
 import market.dal.hibernate.HibernatePurchaseHistoryRepository;
+import market.util.MarketItemId;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
@@ -100,7 +102,7 @@ public class DiscardServer {
 
         sessionFactory = configureHibernateSessionFactory();
         PurchaseHistoryRepository repo =new HibernatePurchaseHistoryRepository(sessionFactory);
-        Float test = repo.getAveragePrice(1384153623,188530139, Duration.ofDays(32));
+        ItemPurchaseStatistic test = repo.getItemPurchaseStatistic(new MarketItemId(1384153623,188530139), Duration.ofDays(2));
         String s="";
        // socketTest();
     }
